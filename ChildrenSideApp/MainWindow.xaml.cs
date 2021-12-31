@@ -23,6 +23,7 @@ namespace ChildrenSideApp
         public MainWindow()
         {
             InitializeComponent();
+            //init
         }
     }
 }
