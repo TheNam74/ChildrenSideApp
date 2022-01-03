@@ -7,7 +7,21 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" >
     <Grid>
-        
-        <Button Click="Button_Click" Margin="162,98,253,150">abc</Button>
+        <TextBlock Margin="82,63,378,318">
+            <TextBlock Text="Username:" VerticalAlignment="Top" Width="110"  />
+            <TextBox  Name="usernameBox" VerticalAlignment="Top" Width="222" />
+        </TextBlock>
+        <TextBlock Margin="84,114,334,261">
+            <TextBlock Text="Password:" VerticalAlignment="Top" Width="110"  />
+            <PasswordBox  Name="passwordBox" VerticalAlignment="Top" Width="222" />
+        </TextBlock>
+        <Button Name="LoginBtn" Margin="261,158,439,237" Click="Login_Click">Loggin</Button>
+        <Button Name="a" Margin="430,326,270,69" Click="Button_Click2">Thread test</Button>
+
+        <TextBlock Margin="544,58,106,323">
+            <TextBlock Text="Attempt:" VerticalAlignment="Top" Width="70"  />
+            <TextBlock Text="{Binding AttemptToLogin, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"  Name="attemptBox" VerticalAlignment="Top" Width="50" />
+        </TextBlock>
+
     </Grid> 
 </Window>
