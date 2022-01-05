@@ -357,7 +357,7 @@ namespace ChildrenSideApp
             string ToHourStr = log.To.Hour.ToString("00");
             string ToMinuteStr = log.To.Minute.ToString("00");
 
-            string logString = $"F{FromHourStr}:{FromMinuteStr} T{ToHourStr}:{ToMinuteStr}";
+            string logString = $"F{FromHourStr}:{FromMinuteStr} T{ToHourStr}:{ToMinuteStr}\n";
             if (!File.Exists(LOGFILEPATH))
             {
                 //TODO
@@ -365,7 +365,7 @@ namespace ChildrenSideApp
 
                 using (TextWriter tw = new StreamWriter(LOGFILEPATH))
                 {
-                    tw.WriteLine(logString);
+                    tw.Write(logString);
                 }
 
             }
@@ -373,7 +373,7 @@ namespace ChildrenSideApp
             {
                 using (StreamWriter sw = File.AppendText(LOGFILEPATH))
                 {
-                    sw.WriteLine(logString);
+                    sw.Write(logString);
                 }
             }
         }
@@ -537,3 +537,6 @@ namespace ChildrenSideApp
 
 //MessageBox.Show($"From: {schedule.From.Hour},{schedule.From.Minute} To: {schedule.To.Hour},{schedule.To.Minute} Duration: {schedule.Duration} Interupt: {schedule.Interupt} Sum: {schedule.Sum}");
 
+//Thêm log nhớ xuống dòng
+
+//Fix lỗi con trỏ ở new line schedule
