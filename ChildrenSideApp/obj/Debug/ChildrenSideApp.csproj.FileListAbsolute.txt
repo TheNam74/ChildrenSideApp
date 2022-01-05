@@ -13,3 +13,4 @@ C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\D
 C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Debug\ChildrenSideApp.csproj.CoreCompileInputs.cache
 C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Debug\ChildrenSideApp.exe
 C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Debug\ChildrenSideApp.pdb
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Debug\ChildrenSideApp.csproj.Fody.CopyLocal.cache

@@ -21,8 +21,6 @@ namespace ChildrenSideApp
         public int Duration { get; set; }
         public int Interupt { get; set; }   
         public int Sum { get; set; }
-
-
     }
     public class Interval
     {

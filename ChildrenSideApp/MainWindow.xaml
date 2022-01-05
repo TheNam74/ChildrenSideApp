@@ -7,21 +7,28 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" >
     <Grid>
-        <TextBlock Margin="82,63,378,318">
-            <TextBlock Text="Username:" VerticalAlignment="Top" Width="110"  />
-            <TextBox  Name="usernameBox" VerticalAlignment="Top" Width="222" />
+        <TextBlock Margin="181,77,279,304">
+            <TextBlock Text="Username:" VerticalAlignment="Top" Width="61"  />
+            <TextBox  Name="usernameBox" VerticalAlignment="Top" Width="190" />
         </TextBlock>
-        <TextBlock Margin="84,114,334,261">
-            <TextBlock Text="Password:" VerticalAlignment="Top" Width="110"  />
-            <PasswordBox  Name="passwordBox" VerticalAlignment="Top" Width="222" />
-        </TextBlock>
-        <Button Name="LoginBtn" Margin="261,158,439,237" Click="Login_Click">Loggin</Button>
-        <Button Name="a" Margin="430,326,270,69" Click="Button_Click2">Thread test</Button>
+        <TextBlock Margin="181,124,237,251"><InlineUIContainer>
+                <TextBlock Text="Password:" VerticalAlignment="Top" Width="61"  />
+            </InlineUIContainer><Run Text=" "/><InlineUIContainer>
+                <PasswordBox  x:Name="passwordBox" VerticalAlignment="Top" Width="190" />
+            </InlineUIContainer></TextBlock>
+        <Button Name="LoginBtn" Margin="293,164,407,227" Click="Login_Click" IsDefault="true" >Login</Button>
+        <Button Name="a" Margin="610,380,90,15" Click="Button_Click2">Thread test</Button>
 
-        <TextBlock Margin="544,58,106,323">
-            <TextBlock Text="Attempt:" VerticalAlignment="Top" Width="70"  />
+        <TextBlock Margin="267,269,302,112">
+            <TextBlock Text="Số lần đăng nhập thất bại:" VerticalAlignment="Top" Width="144"  />
             <TextBlock Text="{Binding AttemptToLogin, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"  Name="attemptBox" VerticalAlignment="Top" Width="50" />
         </TextBlock>
+
+        <TextBlock Margin="270,319,380,62">
+            <TextBlock Text="Đếm ngược:" VerticalAlignment="Top" Width="70"  />
+            <TextBlock Name="CountDownBox" VerticalAlignment="Top" Width="50" />
+        </TextBlock>
+
 
     </Grid> 
 </Window>
