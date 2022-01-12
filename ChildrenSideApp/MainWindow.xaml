@@ -17,8 +17,7 @@
                 <PasswordBox  x:Name="passwordBox" VerticalAlignment="Top" Width="190" />
             </InlineUIContainer></TextBlock>
         <Button Name="LoginBtn" Margin="293,164,407,227" Click="Login_Click" IsDefault="true" >Login</Button>
-        <Button Name="a" Margin="610,380,90,15" Click="Button_Click2">Thread test</Button>
-
+        
         <TextBlock Margin="267,269,302,112">
             <TextBlock Text="Số lần đăng nhập thất bại:" VerticalAlignment="Top" Width="144"  />
             <TextBlock Text="{Binding AttemptToLogin, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"  Name="attemptBox" VerticalAlignment="Top" Width="50" />

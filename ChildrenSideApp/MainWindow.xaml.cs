@@ -19,25 +19,28 @@ using System.Globalization;
 using System.Diagnostics;
 using System.ComponentModel;
 
+
 namespace ChildrenSideApp
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
 
-        string ROOTPATH = "C:\\Users\\PC\\VNU-HCMUS\\VŨ CÔNG DUY - he dieu hanh\\thuc muc sync\\";
+        string ROOTPATH = "C:\\Users\\PC\\VNU-HCMUS\\VŨ CÔNG DUY - he dieu hanh\\thuc muc sync2\\";
         string SCHEDULEFILEPATH = "schedule.txt";
         public static string LOGFOLDERPATH, LOGFILEPATH;
         public static Thread th_ShutDownTiming15s;
         public static Thread th_ScreenShot;
-        public static Thread th_ShowMessageBox;
         public static Thread th_UpdateSchedule;
         public static Thread th_CheckTimeUp;
+        public static Thread th_ShowMessageBox;
         public int AttemptToLogin { get; set; }
 
         //Biến để lưu thời gian mở và tắt máy để ghi vào file nhật ký
         CTime log = new CTime(0, 0, 0, 0, 0, 0, 0);
         //Biến lưu thời gian biểu
         CTime schedule = new CTime(0, 0, 0, 0, 9999999, 0, 999999999);
+        //Biến lưu thứ tự của thời gian biểu hiện hành trong danh sách thời gian biểu
+        int scheduleIndex;
         //Biến báo hiệu thời gian biểu bị thay đổi
         bool isScheduleModified = false;
         //Biến lưu danh sách thời gian biểu (1 dòng trong file là 1 thời gian biểu)
@@ -51,8 +54,6 @@ namespace ChildrenSideApp
         bool shutdown = true;
         //Biến lưu thời điểm được sử dụng máy tiếp theo
         CTime NextTime = new CTime(0, 0, 0, 0, 9999999, 0, 999999999);
-
-
 
         //================Các biến mô phỏng thời gian và các biến test================
         int Wait60Minutes = 15000; //3600000;
@@ -79,87 +80,91 @@ namespace ChildrenSideApp
             th_ScreenShot = new Thread(() => ScreenShot(LOGFOLDERPATH));
             //Tạo thread cập nhật thời gian biểu liên tục
             th_UpdateSchedule = new Thread(() => ReadSchedule_Thread(SCHEDULEFILEPATH));
-            //Thread 
+            //Tạo thread kiểm tra đã hết giờ chưa
             th_CheckTimeUp = new Thread(() => CheckTimeUp());
-
+            //Tạo thread hẹn giờ tắt máy
             th_ShutDownTiming15s = new Thread(() => ShutDownTiming());
+
+
+            if (!Directory.Exists(ROOTPATH))
+                Init();
         }
 
         //log in
         private void Login_Click(object sender, RoutedEventArgs e)
         {
-            //Lấy thời gian hiện tại
-            var date = DateTime.Now;
-            int currentHour = date.Hour;
-            int currentMinute = date.Minute;
+            test();
 
-            //Lưu thời gian bắt đầu dùng máy
-            log.From.Hour = currentHour;
-            log.From.Minute = currentMinute;
+            ////Lấy thời gian hiện tại
+            //var date = DateTime.Now;
+            //int currentHour = date.Hour;
+            //int currentMinute = date.Minute;
 
-            //actor 0:stranger, 1: parents, 2: children
-            int actor = Loggin(usernameBox.Text, passwordBox.Password);
-            if (actor == 1)
-            {
-                //Nếu đăng nhập đúng là phụ huynh thì reset số lần đăng nhập thất bại về 0
-                AttemptToLogin = 0;
-                MessageBox.Show("Ban la phu huynh, duoc dung may 60p!!!");
+            ////Lưu thời gian bắt đầu dùng máy
+            //log.From.Hour = currentHour;
+            //log.From.Minute = currentMinute;
 
-                //Ngừng thread đếm ngược tắt máy
-                shutdown = false;
-                //Ẩn cho app chạy ngầm
-                this.Hide();
-                //Thời gian dùng 60 của phụ huynh
-                Thread.Sleep(Wait60Minutes);
-                //Reset lại biến đếm cho đồng hồ đếm ngược 15s
-                counter = wait15sec;
-                //Xóa ô mật khẩu
-                passwordBox.Clear();
-            }
-            else
-            {
-                //Đọc file thông tin khung giờ được dùng
-                ReadSchedule(SCHEDULEFILEPATH);
+            ////actor 0:stranger, 1: parents, 2: children
+            //int actor = Loggin(usernameBox.Text, passwordBox.Password);
+            //if (actor == 1)
+            //{
+            //    //Nếu đăng nhập đúng là phụ huynh thì reset số lần đăng nhập thất bại về 0
+            //    AttemptToLogin = 0;
+            //    MessageBox.Show("Ban la phu huynh, duoc dung may 60p!!!");
 
-                //MessageBox.Show($"121: readchedule From: {schedule.From.Hour},{schedule.From.Minute} To: {schedule.To.Hour},{schedule.To.Minute} Duration: {schedule.Duration} Interupt: {schedule.Interupt} Sum: {schedule.Sum} \nCalcMLeft: {CalcMinuteLeft(schedule)}");
+            //    //Ngừng thread đếm ngược tắt máy
+            //    shutdown = false;
+            //    //Ẩn cho app chạy ngầm
+            //    this.Hide();
+            //    //Thời gian dùng 60 của phụ huynh
+            //    Thread.Sleep(Wait60Minutes);
+            //    //Reset lại biến đếm cho đồng hồ đếm ngược 15s
+            //    counter = wait15sec;
+            //    //Xóa ô mật khẩu
+            //    passwordBox.Clear();
+            //}
+            //else
+            //{
+            //    //Đọc file thông tin khung giờ được dùng
+            //    ReadSchedule(SCHEDULEFILEPATH);
+
+            //    //MessageBox.Show($"121: readchedule From: {schedule.From.Hour},{schedule.From.Minute} To: {schedule.To.Hour},{schedule.To.Minute} Duration: {schedule.Duration} Interupt: {schedule.Interupt} Sum: {schedule.Sum} \nCalcMLeft: {CalcMinuteLeft(schedule)}");
 
 
-                //Nếu đang không trong thời gian được dùng 
-                if (CalcMinuteLeft(schedule)==0)
-                {
-                    MessageBox.Show("Chưa tới thời gian dùng máy, thời gian dùng máy tiếp theo là : ");
-                    //Thực hiện song song 2 việc đếm ngược 15s tắt máy và quay lại đăng nhập, nếu đăng nhập kịp thì cho dùng tiếp
-                    //th_ShutDownTiming15s.Start();
-                    ShutDownTiming();
-                }
-                //Nếu đang trong thời gian dùng máy và đúng mật khẩu của trẻ
-                else if (actor == 2)
-                {
-                    Children();
-                }
-            }
-            //Tăng số lần đăng nhập thất bại lên, nếu đã đủ 3 lần thì không cho dùng máy trong 10 phút rồi shutdown
-            ++AttemptToLogin;
-            if (AttemptToLogin == 3)
-            {
-                //TODO, chặn không cho người đung dùng máy
-                MessageBox.Show("Đăng nhập quá 3 lần, tắt máy trong 10p");
-                Thread.Sleep(Wait10Minutes);
-                MessageBox.Show("Shutdown");
-                //Process.Start("shutdown", "/s");
-            }
+            //    //Nếu đang không trong thời gian được dùng 
+            //    if (CalcMinuteLeft(schedule)==0)
+            //    {
+            //        MessageBox.Show($"Chưa tới thời gian dùng máy, thời gian dùng máy tiếp theo là : {NextTime.From.Hour}:{NextTime.From.Minute}");
+            //        //Thực hiện song song 2 việc đếm ngược 15s tắt máy và quay lại đăng nhập, nếu đăng nhập kịp thì cho dùng tiếp
+            //        //th_ShutDownTiming15s.Start();
+            //        ShutDownTiming();
+            //    }
+            //    //Nếu đang trong thời gian dùng máy và đúng mật khẩu của trẻ
+            //    else if (actor == 2)
+            //    {
+            //        Children();
+            //    }
+            //}
+            ////Tăng số lần đăng nhập thất bại lên, nếu đã đủ 3 lần thì không cho dùng máy trong 10 phút rồi shutdown
+            //++AttemptToLogin;
+            //if (AttemptToLogin == 3)
+            //{
+            //    //TODO, chặn không cho người đung dùng máy
+            //    MessageBox.Show("Đăng nhập quá 3 lần, tắt máy trong 10p");
+            //    Thread.Sleep(Wait10Minutes);
+            //    MessageBox.Show("Shutdown");
+            //    //Process.Start("shutdown", "/s");
+            //}
 
-            //Hiển thị lại màn hình chuẩn bị quay lại lấy mật khẩu
-            this.Show();
-
+            ////Hiển thị lại màn hình chuẩn bị quay lại lấy mật khẩu
+            //this.Show();
         }
-
 
         int Loggin(string username, string password)
         {
-            if (username == "child" && password == "child")
+            if (username == "child" && password == "123")
                 return 2;
-            else if (username == "parent" && password == "parent")
+            else if ((username == "parent1" && password == "321")|| (username == "parent2" && password == "345"))
                 return 1;
             else return 0;
         }
@@ -198,6 +203,7 @@ namespace ChildrenSideApp
             ScheduleFileContent = temp;
             ScheduleList.Clear();
             //ScheduleFileContent = temp;
+            int index = 0;
             string[] lines = temp.Split('\n');
             foreach (string line in lines)
             {
@@ -236,14 +242,18 @@ namespace ChildrenSideApp
                         tempSchedule.Sum = Int32.Parse(sumStr);
                     }
 
-                    //Xác định thời gian biểu mà khung giờ mở máy thuộc về
+                    //Xác định khung giờ hiện tại thuộc thời gian biểu nào, lưu lại thời gian biểu và thứ tự của thời gian biểu trong danh sách luôn
 
-                    if ((log.From.Hour > tempSchedule.From.Hour || log.From.Hour == tempSchedule.From.Hour && log.From.Minute >= tempSchedule.From.Minute) &&
-                        (log.From.Hour < tempSchedule.To.Hour || log.From.Hour == tempSchedule.To.Hour && log.From.Minute < tempSchedule.To.Minute))
-                        schedule = tempSchedule;
-                    //Lưu thời gian biểu này vào danh sách thời gian biểu
-                    ScheduleList.Add(tempSchedule);
                 }
+                if ((log.From.Hour > tempSchedule.From.Hour || log.From.Hour == tempSchedule.From.Hour && log.From.Minute >= tempSchedule.From.Minute) &&
+                (log.From.Hour < tempSchedule.To.Hour || log.From.Hour == tempSchedule.To.Hour && log.From.Minute < tempSchedule.To.Minute))
+                {
+                    schedule = tempSchedule;
+                    scheduleIndex = index;
+                }
+                ScheduleList.Add(tempSchedule);
+                index++;
+
             }
 
             //Kiểm tra nếu thời gian biểu bị thay đổi thì báo hiệu lên
@@ -282,6 +292,15 @@ namespace ChildrenSideApp
         }
 
         //Tính thời gian dùng còn lại
+        int GetNextSchedule(List<CTime> ScheduleList,int currentHour,int currentMinute)
+        {
+            for (int i = 0; i < ScheduleList.Count();i++)
+            {
+                if ((ScheduleList[i].From.Hour * 60 + ScheduleList[i].From.Minute) > (currentHour * 60 + currentMinute))
+                    return i;
+            }
+            return 0;
+        }
         int CalcMinuteLeft(CTime schedule)
         {
 
@@ -294,12 +313,8 @@ namespace ChildrenSideApp
             if (!isInSchedule)
             {
                 //Lưu lại thời gian được dùng tiếp theo
-                //foreach (CTime s in ScheduleList)
-                //{
-                //    if(((currentHour > schedule.From.Hour || currentHour == schedule.From.Hour && currentMinute >= schedule.From.Minute) &&
-                //    (currentHour < schedule.To.Hour || currentHour == schedule.To.Hour && currentMinute < schedule.To.Minute)))
-                //}
-
+                scheduleIndex = GetNextSchedule(ScheduleList, currentHour, currentMinute);
+                NextTime = ScheduleList[scheduleIndex];
                 return 0;
             }
             //Quy đổi giờ ra phút để cộng trừ nhân chia cho dễ
@@ -325,30 +340,42 @@ namespace ChildrenSideApp
                     int T = log.To.Hour * 60 + log.To.Minute;
                     TotalTimeLeft -= T - F;
                 }
-
-                //Tính xem có phải đang trong khoảng thời gian interupt không, có thì return 0 luôn
-                CTime LatestUseLog = LogList[LogList.Count-1];
-                if (LatestUseLog.To.Hour * 60 + LatestUseLog.To.Minute + schedule.Interupt > currentHour * 60 + currentMinute)
+                //Nếu đã dùng hết thời gian trong khung giờ thì báo luôn giờ tiếp theo được dc
+                if (TotalTimeLeft <= 0) { 
+                    scheduleIndex = GetNextSchedule(ScheduleList, currentHour, currentMinute);
+                    NextTime = ScheduleList[scheduleIndex];
                     return 0;
+                }
+                CTime LatestUseLog = LogList[LogList.Count - 1];
+                //Nếu nằm trong interupt thì return 0
+                if (LatestUseLog.To.Hour * 60 + LatestUseLog.To.Minute + schedule.Interupt > currentHour * 60 + currentMinute)
+                {
+                    NextTime.From.Hour = LatestUseLog.To.Hour;
+                    NextTime.From.Minute = LatestUseLog.To.Minute;
+                    NextTime = AddMinute(NextTime, schedule.Interupt);
+                    return 0;
+                }
+
+                //Tính xem nếu chờ interupt xong thì hết khoảng thời gian chưa, nếu hết luôn thì cũng báo luôn thười gian tiếp theo
+                if (LatestUseLog.To.Hour * 60 + LatestUseLog.To.Minute + schedule.Interupt > schedule.To.Hour * 60 + schedule.To.Minute)
+                {
+                    //Lưu lại thời gian được dùng tiếp theo
+                    scheduleIndex = GetNextSchedule(ScheduleList, currentHour, currentMinute);
+                    NextTime = ScheduleList[scheduleIndex];
+                    return 0;
+                }
             }
-
-            //MessageBox.Show($"MinutesLeftTillDuration: {MinutesLeftTillDuration}, MinutesLeftTillEnd: {MinutesLeftTillEnd}, TotalTimeLeft: {TotalTimeLeft}");
-
-
-            //So sánh thời gian từ thời điểm hiện tại tới mốc "To" trong thời gian biểu và thời gian từ thời điểm hiện tại tới khi hết Duration, cái nào nhỏ hơn thì lấy
-            //if(MinutesLeftTillDuration< MinutesLeftTillEnd)
-            //{
-            //    if(MinutesLeftTillDuration< TotalTimeLeft)
-            //    {
-            //        return MinutesLeftTillDuration;
-            //    }
-            //    else return 
-            //}
 
             int[] arr ={MinutesLeftTillDuration, MinutesLeftTillEnd, TotalTimeLeft};
             return arr.Min();
         }
-
+        //Hàm cộng thời gian
+        CTime AddMinute(CTime current, int minute)
+        {
+            current.From.Hour = current.From.Hour + (current.From.Minute + minute % 60) / 60;
+            current.From.Minute = current.From.Minute + (current.From.Minute + minute % 60) % 60;
+            return current;
+        }
         //Hàm ghi lịch sử dùng máy, giá trị truyền vào là thời gian mở và tất(Gộp vào 1 biến dạng CTime)
         void WriteLogFile(CTime log)
         {
@@ -377,6 +404,45 @@ namespace ChildrenSideApp
                 }
             }
         }
+
+        //Hàm tạo folder với file thời gian biểu lúc đầu
+        void Init()
+        {
+            //Tạo folder
+            System.IO.Directory.CreateDirectory(ROOTPATH);
+            //Tạo file thời gian biểu và viết xuống luôn
+            //File.Create($"{ROOTPATH}schedule.txt");
+            CTime[] list = { new CTime(1, 2, 18, 4, 5, 6, 7), new CTime(1, 2, 3, 4, 5, 6, 7), new CTime(1, 2, 3, 4, 5, 6, 7) };
+            List<CTime> initScheduleList = new List<CTime>(list);
+            WriteDownTheSchedule($"{ROOTPATH}schedule.txt", initScheduleList);
+        }
+        public static bool WriteDownTheSchedule(string path, List<CTime> list)
+        {
+            int i = 0;
+            StreamWriter sw = new StreamWriter(path);
+            foreach (var item in list)
+            {
+                string tempLine = item.TextToSave();
+                i++;
+                if (i != list.Count)
+                {
+                    tempLine += "\n";
+                }
+                sw.Write(tempLine);
+            }
+            sw.Close();
+            return true;
+        }
+
+        void test()
+        {
+            var oneDrivePath = Environment.GetEnvironmentVariable("OneDriveConsumer");
+            var fileName = oneDrivePath + @"\" + "testOneDrive.txt";
+            //File.WriteAllText(fileName, "blablablabla");
+            MessageBox.Show(oneDrivePath);
+        }
+
+
         //=================================Các hàm dùng tạo thread====================================
         private void ShutDownTiming()
         {
@@ -416,7 +482,7 @@ namespace ChildrenSideApp
                 bitmap_Screen.Save($"{LOGFOLDERPATH}{filename}");
                 Thread.Sleep(Wait1Minute);
             }
-        }
+        }   
         void ReadSchedule_Thread(string FILEPATH)
         {
             while (true)
@@ -445,11 +511,12 @@ namespace ChildrenSideApp
             log.To.Hour = currentHour;
             log.To.Minute = currentMinute;
             //Thông báo và tắt máy
-            MessageBox.Show("Da het thoi gian dung may, tat may sau 1 phut");
-            Thread.Sleep(Wait1Minute);
             WriteLogFile(log);
 
-            MessageBox.Show("shutdown");
+            //NextTime.From.Hour = currentHour + schedule.Interupt/60 + (currentMinute + schedule.Interupt % 60)/60;
+            //NextTime.From.Minute = (currentMinute + schedule.Interupt % 60)/60;
+            MessageBox.Show($"Da het thoi gian dung may, tat may sau 1 phut");//\nThời gian sử dụng máy tiếp theo là:{NextTime.From.Hour}:{NextTime.From.Minute}");
+            Thread.Sleep(Wait1Minute);
 
             //Tắt 2 thread đang chạy song song với thread này
             th_ScreenShot.Abort();
@@ -540,3 +607,5 @@ namespace ChildrenSideApp
 //Thêm log nhớ xuống dòng
 
 //Fix lỗi con trỏ ở new line schedule
+
+//https://pretagteam.com/question/wpf-way-to-take-screenshots

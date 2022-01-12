@@ -21,6 +21,26 @@ namespace ChildrenSideApp
         public int Duration { get; set; }
         public int Interupt { get; set; }   
         public int Sum { get; set; }
+        public string TextToSave()
+        {
+            string result = "";
+            result += "F" + From.Hour.ToString("00") + ":" + From.Minute.ToString("00");
+            result += " ";
+            result += "T" + To.Hour.ToString("00") + ":" + To.Minute.ToString("00");
+            if (Duration != 0)
+            {
+                result += " D" + Duration;
+            }
+            if (Interupt != 0)
+            {
+                result += " I" + Interupt;
+            }
+            if (Sum != 0)
+            {
+                result += " S" + Sum;
+            }
+            return result;
+        }
     }
     public class Interval
     {

@@ -1,0 +1,16 @@
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\bin\Release\ChildrenSideApp.exe.config
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\bin\Release\ChildrenSideApp.exe
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\bin\Release\ChildrenSideApp.pdb
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Release\ChildrenSideApp.csproj.AssemblyReference.cache
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Release\MainWindow.g.cs
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Release\App.g.cs
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Release\ChildrenSideApp_MarkupCompile.cache
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Release\ChildrenSideApp_MarkupCompile.lref
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Release\MainWindow.baml
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Release\ChildrenSideApp.g.resources
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Release\ChildrenSideApp.Properties.Resources.resources
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Release\ChildrenSideApp.csproj.GenerateResource.cache
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Release\ChildrenSideApp.csproj.CoreCompileInputs.cache
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Release\ChildrenSideApp.csproj.Fody.CopyLocal.cache
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Release\ChildrenSideApp.exe
+C:\Users\PC\Desktop\University\HDH\DOAN_CK\ChildrenSideApp\ChildrenSideApp\obj\Release\ChildrenSideApp.pdb
